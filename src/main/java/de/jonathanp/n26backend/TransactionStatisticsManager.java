@@ -11,6 +11,7 @@ public class TransactionStatisticsManager {
 
     public boolean addTransaction(Transaction transaction, long currentTime)
     {
+        System.out.println(transaction.getTimestamp());
         //Check if the timestamp is in out range
         if (currentTime < transaction.getTimestamp() || currentTime - transaction.getTimestamp() > BUFFER_SIZE)
         {
@@ -81,7 +82,12 @@ public class TransactionStatisticsManager {
         }
 
         System.out.println("Cleanup complete");
+
         lastUpdate = currentTime;
+
+        if(maxReset || minReset){
+            iterator = dataBuffer.iterator(timestampBucket(currentTime + 1), timestampBucket(lastUpdate));
+        }
     }
 
     private void resetData()
@@ -95,10 +101,10 @@ public class TransactionStatisticsManager {
         return (int) timestamp % BUFFER_SIZE;
     }
 
-    Statistics cumulative;
-    CircularBuffer<Statistics> dataBuffer;
-    boolean maxReset;
-    boolean minReset;
+    private Statistics cumulative;
+    private CircularBuffer<Statistics> dataBuffer;
+    private boolean maxReset;
+    private boolean minReset;
     private long lastUpdate;
 
     static final int BUFFER_SIZE = 60000;

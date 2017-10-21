@@ -11,7 +11,6 @@ import java.util.stream.IntStream;
 public class CircularBuffer<T> {
 
     public CircularBuffer(Class<T> type, int size) {
-        System.out.println("Init with size" + size);
         dataBuffer = IntStream.range(0, size).mapToObj(i -> newElementInstance(type)).collect(Collectors.toList());
     }
 
