@@ -9,12 +9,31 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.Instant;
+
 @RestController
 public class TransactionStatisticsController {
 
-    @RequestMapping(method= RequestMethod.POST, value="/transactions")
-    public ResponseEntity<?> greeting(@RequestBody Transaction input) {
+    TransactionStatisticsManager statisticsManager;
 
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    TransactionStatisticsController()
+    {
+        statisticsManager = new TransactionStatisticsManager();
+    }
+
+    @RequestMapping(method= RequestMethod.POST, value="/transactions")
+    public ResponseEntity<?> transactions(@RequestBody Transaction input) {
+
+        if(statisticsManager.addTransaction(input, Instant.now().toEpochMilli())) {
+            return ResponseEntity.status(HttpStatus.CREATED).build();
+        } else {
+            return ResponseEntity.noContent().build();
+        }
+
+    }
+
+    @RequestMapping(method= RequestMethod.GET, value="/statistics")
+    public Statistics statistics() {
+        return statisticsManager.getCumulativeStatistics(Instant.now().toEpochMilli());
     }
 }
