@@ -1,4 +1,4 @@
-package de.jonathanp.n26backend;
+package de.jonathanp.transactionstatistics;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

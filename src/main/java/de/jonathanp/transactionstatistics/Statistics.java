@@ -1,4 +1,4 @@
-package de.jonathanp.n26backend;
+package de.jonathanp.transactionstatistics;
 
 public class Statistics implements Cloneable{
 

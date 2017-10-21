@@ -1,4 +1,4 @@
-package de.jonathanp.n26backend;
+package de.jonathanp.transactionstatistics;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
