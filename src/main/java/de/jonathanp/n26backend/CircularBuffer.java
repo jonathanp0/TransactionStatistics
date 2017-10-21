@@ -1,19 +1,21 @@
 package de.jonathanp.n26backend;
+
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.List;
 import java.util.ListIterator;
+import java.util.Collections;
 
-public class CircularBuffer<T>{
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
-    public CircularBuffer(int size) {
-        this.dataBuffer = new ArrayList<T>(size);
+public class CircularBuffer<T> {
+
+    public CircularBuffer(Class<T> type, int size) {
+        System.out.println("Init with size" + size);
+        dataBuffer = IntStream.range(0, size).mapToObj(i -> newElementInstance(type)).collect(Collectors.toList());
     }
 
-    T get(int index)
-    {
-        if (index < 0 || index >= size)
-            throw new IndexOutOfBoundsException();
-
+    T get(int index) {
         return dataBuffer.get(index);
     }
 
@@ -24,7 +26,7 @@ public class CircularBuffer<T>{
 
             @Override
             public boolean hasNext() {
-                return currentIndex + 1 != end;
+                return currentIndex != end;
             }
 
             @Override
@@ -46,12 +48,12 @@ public class CircularBuffer<T>{
 
             @Override
             public int nextIndex() {
-                return currentIndex < size ? currentIndex + 1 : 0;
+                return currentIndex < (dataBuffer.size() - 1) ? currentIndex + 1 : 0;
             }
 
             @Override
             public int previousIndex() {
-                return currentIndex == 0 ? size - 1 : currentIndex -1;
+                return currentIndex == 0 ? dataBuffer.size() - 1 : currentIndex - 1;
             }
 
             @Override
@@ -72,6 +74,13 @@ public class CircularBuffer<T>{
         return it;
     }
 
-    private ArrayList<T> dataBuffer;
-    private int size;
+    T newElementInstance(Class<T> type) {
+        try {
+            return type.newInstance();
+        } catch (InstantiationException | IllegalAccessException ex) {
+            throw new UnsupportedOperationException(); //Should never happen
+        }
+    }
+
+    private List<T> dataBuffer;
 }
