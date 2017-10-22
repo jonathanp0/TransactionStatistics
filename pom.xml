@@ -10,7 +10,7 @@
     </parent>
 
     <groupId>de.jonathanp</groupId>
-    <artifactId>n26statistics</artifactId>
+    <artifactId>transactionstatistics</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <dependencies>
