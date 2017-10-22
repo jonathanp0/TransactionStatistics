@@ -64,14 +64,26 @@ public class Statistics implements Cloneable{
         this.count = count;
     }
 
+    /* Subtract another Statistics object from our totals.
+       Warning: Invalidates the min and max values.
+     */
     public void subtract(Statistics other) {
-        sum -= other.sum;
+
         count -= other.count;
+
+        if (count == 0) {
+            avg = 0;
+        } else {
+            avg = ((avg * count) - other.sum) / (count - other.count);
+        }
+
+        sum -= other.sum:
     }
 
     public void add(double amount) {
-        sum += amount;
         count ++;
+        avg = avg + (amount - avg)/count;
+        sum += amount;
         max = Math.max(max, amount);
         min = Math.min(min, amount);
     }
