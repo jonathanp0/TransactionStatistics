@@ -1,13 +1,12 @@
 package de.jonathanp.transactionstatistics;
 
 import static org.junit.Assert.assertEquals;
-
-import de.jonathanp.transactionstatistics.Statistics;
+import static de.jonathanp.transactionstatistics.Utils.checkValues;
 import org.junit.Test;
 
 public class StatisticsTest {
     @Test
-    public void addAndReset() {
+    public void testAddAndReset() {
         Statistics stats = new Statistics();
         checkValues(stats, 0, 0,0,0,0);
 
@@ -24,7 +23,7 @@ public class StatisticsTest {
     }
 
     @Test
-    public void subtractTest() {
+    public void testSubtract() {
         Statistics bucketOne = new Statistics();
         bucketOne.add(100);
         bucketOne.add(200);
@@ -45,19 +44,5 @@ public class StatisticsTest {
         checkValues(cumulative, 0, 0, 0);
     }
 
-    void checkValues(Statistics stats, double sum, double avg, double max, double min, long count)
-    {
-        assertEquals(sum, stats.getSum(), 0);
-        assertEquals(avg, stats.getAvg(), 0);
-        assertEquals(max, stats.getMax(), 0);
-        assertEquals(min, stats.getMin(), 0);
-        assertEquals(count, stats.getCount());
-    }
 
-    void checkValues(Statistics stats, double sum, double avg, long count)
-    {
-        assertEquals(sum, stats.getSum(), 0);
-        assertEquals(avg, stats.getAvg(), 0);
-        assertEquals(count, stats.getCount());
-    }
 }
