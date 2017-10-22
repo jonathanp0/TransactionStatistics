@@ -1,15 +1,15 @@
 package de.jonathanp.transactionstatistics;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static de.jonathanp.transactionstatistics.Utils.checkValues;
+import static de.jonathanp.transactionstatistics.Utils.checkLimits;
 import org.junit.Test;
 
 public class ManagerTest {
 
-    static long BASE_TIMESTAMP = 1000000;
-    static long STORAGE_SIZE = 60000;
+    private static long BASE_TIMESTAMP = 1000000;
+    private static long STORAGE_SIZE = 60000;
 
     @Test
     public void testAddTimestamps() {
@@ -51,5 +51,31 @@ public class ManagerTest {
         //Advance again so all values are gone
         checkValues(manager.getCumulativeStatistics(BASE_TIMESTAMP + STORAGE_SIZE + 200), 0,0,0,0,0);
     }
-     
+
+    @Test
+    public void testFullReset() {
+        TransactionStatisticsManager manager = new TransactionStatisticsManager();
+        manager.addTransaction(new Transaction(100, BASE_TIMESTAMP), BASE_TIMESTAMP);
+        checkValues(manager.getCumulativeStatistics(BASE_TIMESTAMP + 100), 100, 100, 100, 100, 1);
+        checkValues(manager.getCumulativeStatistics(BASE_TIMESTAMP + STORAGE_SIZE + 100), 0,0,0,0,0);
+    }
+
+    @Test
+    public void testRecalculateMinMax() {
+        TransactionStatisticsManager manager = new TransactionStatisticsManager();
+        manager.addTransaction(new Transaction(6000, BASE_TIMESTAMP - 100), BASE_TIMESTAMP + 500);
+        manager.addTransaction(new Transaction(2000, BASE_TIMESTAMP + 200), BASE_TIMESTAMP + 500);
+        manager.addTransaction(new Transaction(4000, BASE_TIMESTAMP + 300), BASE_TIMESTAMP + 500);
+        manager.addTransaction(new Transaction(3000, BASE_TIMESTAMP + 301), BASE_TIMESTAMP + 500);
+        checkLimits(manager.getCumulativeStatistics(BASE_TIMESTAMP + 550), 6000, 2000);
+
+        //Recalculate the maximum
+        checkLimits(manager.getCumulativeStatistics(BASE_TIMESTAMP + STORAGE_SIZE), 4000, 2000);
+        //Recalculate the minimum
+        checkLimits(manager.getCumulativeStatistics(BASE_TIMESTAMP + STORAGE_SIZE + 250), 4000, 3000);
+        //Recalculate max again
+        checkLimits(manager.getCumulativeStatistics(BASE_TIMESTAMP + STORAGE_SIZE + 300), 3000, 3000);
+        //Everything is gone
+        checkLimits(manager.getCumulativeStatistics(BASE_TIMESTAMP + STORAGE_SIZE + 301), 0, 0);
+    }
 }
