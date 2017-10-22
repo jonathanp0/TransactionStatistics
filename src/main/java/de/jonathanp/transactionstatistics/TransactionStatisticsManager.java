@@ -18,7 +18,7 @@ class TransactionStatisticsManager {
        Thread safe method.
      */
     public boolean addTransaction(Transaction transaction, long currentTime) {
-        //Check if the timestamp is in out range
+        //Check if the timestamp is in our range
         if (currentTime < transaction.getTimestamp() || currentTime - transaction.getTimestamp() >= BUFFER_SIZE) {
             return false;
         }
@@ -34,7 +34,7 @@ class TransactionStatisticsManager {
         return true;
     }
 
-    /* Returns a copy of the statistics from the 60 seconds preceding current time
+    /* Returns a copy of the statistics from the 60 seconds preceding the current time
        Thread safe method.
      */
     public synchronized Statistics getCumulativeStatistics(long currentTime) {
