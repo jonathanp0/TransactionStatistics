@@ -69,14 +69,13 @@ public class Statistics implements Cloneable{
      */
     public void subtract(Statistics other) {
 
-        count -= other.count;
-
-        if (count == 0) {
+        if (count == other.count) {
             avg = 0;
         } else {
             avg = ((avg * count) - other.sum) / (count - other.count);
         }
 
+        count -= other.count;
         sum -= other.sum;
     }
 
