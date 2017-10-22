@@ -13,5 +13,5 @@ Various optimisations have been made to detect cases when it is not necessary to
 would be possible to go further.
 
 Unit test are included to check the logic of the Statistics and TransactionStatisticsManager classes, which can be
-executed with "mvn test".
-To run a server for testing purposes, execute "mvn spring-boot:run".
+executed with `mvn test`.
+To run a server for testing purposes, execute `mvn spring-boot:run`.
