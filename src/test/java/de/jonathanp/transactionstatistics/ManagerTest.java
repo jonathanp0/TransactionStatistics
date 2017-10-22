@@ -4,17 +4,18 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static de.jonathanp.transactionstatistics.Utils.checkValues;
 import static de.jonathanp.transactionstatistics.Utils.checkLimits;
+
 import org.junit.Test;
 
 public class ManagerTest {
 
-    private static long BASE_TIMESTAMP = 1000000;
-    private static long STORAGE_SIZE = 60000;
+    private static final long BASE_TIMESTAMP = 1000000;
+    private static final long STORAGE_SIZE = 60000;
 
     @Test
     public void testAddTimestamps() {
         TransactionStatisticsManager manager = new TransactionStatisticsManager();
-        checkValues(manager.getCumulativeStatistics(BASE_TIMESTAMP), 0,0,0,0,0);
+        checkValues(manager.getCumulativeStatistics(BASE_TIMESTAMP), 0, 0, 0, 0, 0);
 
         Transaction trans = new Transaction(0, BASE_TIMESTAMP);
         assertFalse(manager.addTransaction(trans, BASE_TIMESTAMP - 1));
@@ -32,8 +33,7 @@ public class ManagerTest {
     }
 
     @Test
-    public void testCumulativeStatistics()
-    {
+    public void testCumulativeStatistics() {
         TransactionStatisticsManager manager = new TransactionStatisticsManager();
         //Add a single transaction in the past
         manager.addTransaction(new Transaction(100, BASE_TIMESTAMP), BASE_TIMESTAMP + 100);
@@ -49,7 +49,7 @@ public class ManagerTest {
         //Advance time so that the first values expire
         checkValues(manager.getCumulativeStatistics(BASE_TIMESTAMP + STORAGE_SIZE), 51, 51, 51, 51, 1);
         //Advance again so all values are gone
-        checkValues(manager.getCumulativeStatistics(BASE_TIMESTAMP + STORAGE_SIZE + 200), 0,0,0,0,0);
+        checkValues(manager.getCumulativeStatistics(BASE_TIMESTAMP + STORAGE_SIZE + 200), 0, 0, 0, 0, 0);
     }
 
     @Test
@@ -57,7 +57,7 @@ public class ManagerTest {
         TransactionStatisticsManager manager = new TransactionStatisticsManager();
         manager.addTransaction(new Transaction(100, BASE_TIMESTAMP), BASE_TIMESTAMP);
         checkValues(manager.getCumulativeStatistics(BASE_TIMESTAMP + 100), 100, 100, 100, 100, 1);
-        checkValues(manager.getCumulativeStatistics(BASE_TIMESTAMP + STORAGE_SIZE + 100), 0,0,0,0,0);
+        checkValues(manager.getCumulativeStatistics(BASE_TIMESTAMP + STORAGE_SIZE + 100), 0, 0, 0, 0, 0);
     }
 
     @Test

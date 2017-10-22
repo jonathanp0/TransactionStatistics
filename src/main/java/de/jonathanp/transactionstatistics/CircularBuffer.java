@@ -6,7 +6,7 @@ import java.util.ListIterator;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class CircularBuffer<T> {
+class CircularBuffer<T> {
 
     public CircularBuffer(Class<T> type, int size) {
         dataBuffer = IntStream.range(0, size).mapToObj(i -> newElementInstance(type)).collect(Collectors.toList());
@@ -17,7 +17,7 @@ public class CircularBuffer<T> {
     }
 
     public ListIterator<T> iterator(int start, int end) {
-        ListIterator<T> it = new ListIterator<T>() {
+        return new ListIterator<T>() {
 
             int currentIndex = start - 1;
 
@@ -34,7 +34,7 @@ public class CircularBuffer<T> {
 
             @Override
             public boolean hasPrevious() {
-                return true;
+                return currentIndex != start;
             }
 
             @Override
@@ -68,10 +68,9 @@ public class CircularBuffer<T> {
                 throw new UnsupportedOperationException();
             }
         };
-        return it;
     }
 
-    T newElementInstance(Class<T> type) {
+    private T newElementInstance(Class<T> type) {
         try {
             return type.newInstance();
         } catch (InstantiationException | IllegalAccessException ex) {
@@ -79,5 +78,5 @@ public class CircularBuffer<T> {
         }
     }
 
-    private List<T> dataBuffer;
+    private final List<T> dataBuffer;
 }

@@ -1,14 +1,14 @@
 package de.jonathanp.transactionstatistics;
 
-import static org.junit.Assert.assertEquals;
 import static de.jonathanp.transactionstatistics.Utils.checkValues;
+
 import org.junit.Test;
 
 public class StatisticsTest {
     @Test
     public void testAddAndReset() {
         Statistics stats = new Statistics();
-        checkValues(stats, 0, 0,0,0,0);
+        checkValues(stats, 0, 0, 0, 0, 0);
 
         stats.add(100);
         checkValues(stats, 100, 100, 100, 100, 1);
@@ -19,7 +19,7 @@ public class StatisticsTest {
         stats.add(150);
         checkValues(stats, 501, 125.25, 200, 51, 4);
         stats.reset();
-        checkValues(stats, 0, 0,0,0,0);
+        checkValues(stats, 0, 0, 0, 0, 0);
     }
 
     @Test

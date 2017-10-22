@@ -1,6 +1,6 @@
 package de.jonathanp.transactionstatistics;
 
-public class Transaction {
+class Transaction {
 
     public Transaction() {
     }

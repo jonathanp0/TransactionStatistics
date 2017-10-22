@@ -1,13 +1,11 @@
 package de.jonathanp.transactionstatistics;
 
-public class Statistics implements Cloneable{
+public class Statistics implements Cloneable {
 
-    public Statistics()
-    {
+    public Statistics() {
     }
 
-    public Statistics(Statistics other)
-    {
+    public Statistics(Statistics other) {
         this.sum = other.sum;
         this.avg = other.avg;
         this.max = other.max;
@@ -15,8 +13,7 @@ public class Statistics implements Cloneable{
         this.count = other.count;
     }
 
-    public void reset()
-    {
+    public void reset() {
         sum = 0;
         avg = 0;
         max = 0;
@@ -28,16 +25,8 @@ public class Statistics implements Cloneable{
         return sum;
     }
 
-    public void setSum(double sum) {
-        this.sum = sum;
-    }
-
     public double getAvg() {
         return avg;
-    }
-
-    public void setAvg(double avg) {
-        this.avg = avg;
     }
 
     public double getMax() {
@@ -60,10 +49,6 @@ public class Statistics implements Cloneable{
         return count;
     }
 
-    public void setCount(long count) {
-        this.count = count;
-    }
-
     /* Subtract another Statistics object from our totals.
        Warning: Invalidates the min and max values.
      */
@@ -80,8 +65,8 @@ public class Statistics implements Cloneable{
     }
 
     public void add(double amount) {
-        count ++;
-        avg = avg + (amount - avg)/count;
+        count++;
+        avg = avg + (amount - avg) / count;
         sum += amount;
         if (count == 1) {
             max = amount;

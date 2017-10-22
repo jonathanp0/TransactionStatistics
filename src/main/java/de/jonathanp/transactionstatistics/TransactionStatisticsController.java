@@ -10,19 +10,18 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.Instant;
 
 @RestController
-public class TransactionStatisticsController {
+class TransactionStatisticsController {
 
-    TransactionStatisticsManager statisticsManager;
+    private final TransactionStatisticsManager statisticsManager;
 
-    TransactionStatisticsController()
-    {
+    TransactionStatisticsController() {
         statisticsManager = new TransactionStatisticsManager();
     }
 
-    @RequestMapping(method= RequestMethod.POST, value="/transactions")
+    @RequestMapping(method = RequestMethod.POST, value = "/transactions")
     public ResponseEntity<?> transactions(@RequestBody Transaction input) {
 
-        if(statisticsManager.addTransaction(input, Instant.now().toEpochMilli())) {
+        if (statisticsManager.addTransaction(input, Instant.now().toEpochMilli())) {
             return ResponseEntity.status(HttpStatus.CREATED).build();
         } else {
             return ResponseEntity.noContent().build();
@@ -30,7 +29,7 @@ public class TransactionStatisticsController {
 
     }
 
-    @RequestMapping(method= RequestMethod.GET, value="/statistics")
+    @RequestMapping(method = RequestMethod.GET, value = "/statistics")
     public Statistics statistics() {
         return statisticsManager.getCumulativeStatistics(Instant.now().toEpochMilli());
     }
