@@ -31,6 +31,8 @@ class TransactionStatisticsController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/statistics")
     public Statistics statistics() {
+
         return statisticsManager.getCumulativeStatistics(Instant.now().toEpochMilli());
+
     }
 }

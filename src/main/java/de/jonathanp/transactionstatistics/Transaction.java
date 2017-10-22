@@ -1,6 +1,10 @@
 package de.jonathanp.transactionstatistics;
 
+/* Class to represent a Transaction input */
 class Transaction {
+
+    private double amount;
+    private long timestamp;
 
     public Transaction() {
     }
@@ -22,10 +26,6 @@ class Transaction {
         return amount;
     }
 
-    public void setAmount(double amount) {
-        this.amount = amount;
-    }
+    public void setAmount(double amount) { this.amount = amount; }
 
-    private double amount;
-    private long timestamp;
 }

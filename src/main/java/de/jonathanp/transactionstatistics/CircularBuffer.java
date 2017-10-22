@@ -6,8 +6,12 @@ import java.util.ListIterator;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+/* Data structure representing a fixed size circular array */
 class CircularBuffer<T> {
 
+    private final List<T> dataBuffer;
+
+    /* Initialise and fills the buffers with objects */
     public CircularBuffer(Class<T> type, int size) {
         dataBuffer = IntStream.range(0, size).mapToObj(i -> newElementInstance(type)).collect(Collectors.toList());
     }
@@ -16,6 +20,7 @@ class CircularBuffer<T> {
         return dataBuffer.get(index);
     }
 
+    /* Get an iterator from index start to index end(both inclusive) */
     public ListIterator<T> iterator(int start, int end) {
         return new ListIterator<T>() {
 
@@ -78,5 +83,4 @@ class CircularBuffer<T> {
         }
     }
 
-    private final List<T> dataBuffer;
 }

@@ -4,16 +4,25 @@ import java.util.ListIterator;
 
 class TransactionStatisticsManager {
 
+    private static final int BUFFER_SIZE = 60000;
+
+    private Statistics cumulative;
+    private CircularBuffer<Statistics> dataBuffer;
+    private long lastUpdate; //The last time we cleared out stale data
+
     public TransactionStatisticsManager() {
         resetData();
     }
 
+    /* Adds a new transaction.
+       Thread safe method.
+     */
     public boolean addTransaction(Transaction transaction, long currentTime) {
         //Check if the timestamp is in out range
         if (currentTime < transaction.getTimestamp() || currentTime - transaction.getTimestamp() >= BUFFER_SIZE) {
             return false;
         }
-        System.out.println("Adding transaction at " + timestampBucket(transaction.getTimestamp()));
+
         synchronized (this) {
             cleanUp(currentTime);
 
@@ -25,14 +34,13 @@ class TransactionStatisticsManager {
         return true;
     }
 
-    public Statistics getCumulativeStatistics(long currentTime) {
-        Statistics statsCopy;
+    /* Returns the statistics from the 60 seconds preceding current time
+       Thread safe method.
+     */
+    public synchronized Statistics getCumulativeStatistics(long currentTime) {
 
-        synchronized (this) {
-            cleanUp(currentTime);
-            statsCopy = new Statistics(cumulative);
-        }
-
+        cleanUp(currentTime);
+        Statistics statsCopy = new Statistics(cumulative);
         return statsCopy;
     }
 
@@ -55,8 +63,8 @@ class TransactionStatisticsManager {
             return;
         }
 
-        System.out.println("Cleaning from " + timestampBucket(lastUpdate + 1) + " to " + timestampBucket(currentTime));
 
+        //Subtract and clear all the data that became stale since the last clean up
         boolean maxReset = false;
         boolean minReset = false;
 
@@ -77,7 +85,7 @@ class TransactionStatisticsManager {
             cumulative.setMin(0);
             cumulative.setMax(0);
         } else if (maxReset || minReset) {
-            System.out.println("Scanning for min/max " + timestampBucket(currentTime + 1) + " " + timestampBucket(lastUpdate));
+
             iterator = dataBuffer.iterator(timestampBucket(currentTime + 1), timestampBucket(lastUpdate));
 
             double newMax = 0;
@@ -85,6 +93,7 @@ class TransactionStatisticsManager {
 
             while (iterator.hasNext()) {
                 Statistics milliStats = iterator.next();
+
                 if (maxReset) {
                     newMax = Math.max(newMax, milliStats.getMax());
                 }
@@ -117,11 +126,5 @@ class TransactionStatisticsManager {
     private int timestampBucket(long timestamp) {
         return (int) timestamp % BUFFER_SIZE;
     }
-
-    private Statistics cumulative;
-    private CircularBuffer<Statistics> dataBuffer;
-    private long lastUpdate;
-
-    private static final int BUFFER_SIZE = 60000;
 
 }

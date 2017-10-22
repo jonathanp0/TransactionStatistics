@@ -1,6 +1,16 @@
 package de.jonathanp.transactionstatistics;
 
-public class Statistics implements Cloneable {
+/*
+  This class contains the data field for the statistics output.
+  It also has methods for adding and subtracting extra transaction information..
+ */
+public class Statistics {
+
+    private double sum;
+    private double avg;
+    private double max;
+    private double min;
+    private long count;
 
     public Statistics() {
     }
@@ -45,9 +55,7 @@ public class Statistics implements Cloneable {
         this.min = min;
     }
 
-    public long getCount() {
-        return count;
-    }
+    public long getCount() { return count; }
 
     /* Subtract another Statistics object from our totals.
        Warning: Invalidates the min and max values.
@@ -64,6 +72,7 @@ public class Statistics implements Cloneable {
         sum -= other.sum;
     }
 
+    /* Add a new transaction to these statistics */
     public void add(double amount) {
         count++;
         avg = avg + (amount - avg) / count;
@@ -77,9 +86,4 @@ public class Statistics implements Cloneable {
         }
     }
 
-    private double sum;
-    private double avg;
-    private double max;
-    private double min;
-    private long count;
 }
