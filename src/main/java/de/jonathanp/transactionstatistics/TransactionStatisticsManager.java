@@ -4,7 +4,7 @@ import java.util.ListIterator;
 
 class TransactionStatisticsManager {
 
-    private static final int BUFFER_SIZE = 60000;
+    private static final int BUFFER_SIZE = 60000; //Number of milliseconds of history to maintain
 
     private Statistics cumulative;
     private CircularBuffer<Statistics> dataBuffer;
@@ -34,7 +34,7 @@ class TransactionStatisticsManager {
         return true;
     }
 
-    /* Returns the statistics from the 60 seconds preceding current time
+    /* Returns a copy of the statistics from the 60 seconds preceding current time
        Thread safe method.
      */
     public synchronized Statistics getCumulativeStatistics(long currentTime) {
@@ -62,7 +62,6 @@ class TransactionStatisticsManager {
             return;
         }
 
-
         //Subtract and clear all the data that became stale since the last clean up
         boolean maxReset = false;
         boolean minReset = false;
@@ -76,7 +75,7 @@ class TransactionStatisticsManager {
                 maxReset = true;
             if (milliStats.getMin() == cumulative.getMin())
                 minReset = true;
-            iterator.set(new Statistics());
+            milliStats.reset();
         }
 
         //Scan the remaining data for a new minimum and maximum, if required
@@ -122,6 +121,7 @@ class TransactionStatisticsManager {
         cumulative = new Statistics();
     }
 
+    /* Converts a timestamp into a buffer index */
     private int timestampBucket(long timestamp) {
         return (int) timestamp % BUFFER_SIZE;
     }

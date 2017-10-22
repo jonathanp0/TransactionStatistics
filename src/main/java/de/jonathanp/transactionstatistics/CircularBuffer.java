@@ -16,7 +16,7 @@ class CircularBuffer<T> {
         dataBuffer = IntStream.range(0, size).mapToObj(i -> newElementInstance(type)).collect(Collectors.toList());
     }
 
-    T get(int index) {
+    public T get(int index) {
         return dataBuffer.get(index);
     }
 
