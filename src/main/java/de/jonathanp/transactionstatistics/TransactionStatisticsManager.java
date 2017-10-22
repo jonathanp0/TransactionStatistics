@@ -40,8 +40,7 @@ class TransactionStatisticsManager {
     public synchronized Statistics getCumulativeStatistics(long currentTime) {
 
         cleanUp(currentTime);
-        Statistics statsCopy = new Statistics(cumulative);
-        return statsCopy;
+        return new Statistics(cumulative);
     }
 
     /*
