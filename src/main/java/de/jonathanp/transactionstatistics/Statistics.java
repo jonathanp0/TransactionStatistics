@@ -56,11 +56,11 @@ public class Statistics implements Cloneable{
         this.min = min;
     }
 
-    public double getCount() {
+    public long getCount() {
         return count;
     }
 
-    public void setCount(double count) {
+    public void setCount(long count) {
         this.count = count;
     }
 
@@ -77,20 +77,25 @@ public class Statistics implements Cloneable{
             avg = ((avg * count) - other.sum) / (count - other.count);
         }
 
-        sum -= other.sum:
+        sum -= other.sum;
     }
 
     public void add(double amount) {
         count ++;
         avg = avg + (amount - avg)/count;
         sum += amount;
-        max = Math.max(max, amount);
-        min = Math.min(min, amount);
+        if (count == 1) {
+            max = amount;
+            min = amount;
+        } else {
+            max = Math.max(max, amount);
+            min = Math.min(min, amount);
+        }
     }
 
     private double sum;
     private double avg;
     private double max;
     private double min;
-    private double count;
+    private long count;
 }
