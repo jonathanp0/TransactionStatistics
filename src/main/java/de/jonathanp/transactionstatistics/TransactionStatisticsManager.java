@@ -11,7 +11,7 @@ public class TransactionStatisticsManager {
 
     public boolean addTransaction(Transaction transaction, long currentTime)
     {
-        System.out.println(transaction.getTimestamp());
+        System.out.println(currentTime);
         //Check if the timestamp is in out range
         if (currentTime < transaction.getTimestamp() || currentTime - transaction.getTimestamp() > BUFFER_SIZE)
         {
@@ -71,7 +71,7 @@ public class TransactionStatisticsManager {
 
         while(iterator.hasNext())
         {
-            System.out.println("Processing " + (iterator.nextIndex()));
+            //System.out.println("Processing " + (iterator.nextIndex()));
             Statistics milliStats = iterator.next();
             cumulative.subtract(milliStats);
             if (milliStats.getMax() == cumulative.getMax())
@@ -85,8 +85,24 @@ public class TransactionStatisticsManager {
 
         lastUpdate = currentTime;
 
+        //Scan the remaining data for a new minimum and maximum, if required
         if(maxReset || minReset){
+            System.out.println("Scanning for min/max " + timestampBucket(currentTime + 1) + " " +  timestampBucket(lastUpdate));
             iterator = dataBuffer.iterator(timestampBucket(currentTime + 1), timestampBucket(lastUpdate));
+            double newMax = cumulative.getMax();
+            double newMin = cumulative.getMin();
+            while(iterator.hasNext()) {
+                Statistics milliStats = iterator.next();
+                if(maxReset) {
+                    newMax = Math.max(newMax, milliStats.getMax());
+                }
+                if(minReset) {
+                    newMin = Math.min(newMin, milliStats.getMin());
+                }
+            }
+            cumulative.setMax(newMax);
+            cumulative.setMin(newMin);
+
         }
     }
 
