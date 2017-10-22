@@ -48,5 +48,8 @@ public class ManagerTest {
 
         //Advance time so that the first values expire
         checkValues(manager.getCumulativeStatistics(BASE_TIMESTAMP + STORAGE_SIZE), 51, 51, 51, 51, 1);
+        //Advance again so all values are gone
+        checkValues(manager.getCumulativeStatistics(BASE_TIMESTAMP + STORAGE_SIZE + 200), 0,0,0,0,0);
     }
+     
 }
